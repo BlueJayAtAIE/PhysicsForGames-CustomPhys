@@ -1,51 +1,43 @@
-/*******************************************************************************************
-*
-*   raylib [core] example - basic window
-*
-*   This example has been created using raylib 1.0 (www.raylib.com)
-*   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
-*
-*   Copyright (c) 2013-2016 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
-
 #include "raylib.h"
+#include "game.h"
+#include "glm.hpp"
 
 int main()
 {
 	// Initialization
 	//--------------------------------------------------------------------------------------
-	int screenWidth = 800;
-	int screenHeight = 450;
+	game gm;
 
-	InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+	gm.init();
+	gm.fixedTimeStep = 1.0f / 30.0f; // About 30 times 1 second.
 
-	SetTargetFPS(60);
+	bool shouldRun = true;
 	//--------------------------------------------------------------------------------------
 
 	// Main game loop
-	while (!WindowShouldClose())    // Detect window close button or ESC key
+	while (shouldRun)
 	{
 		// Update
 		//----------------------------------------------------------------------------------
-		// TODO: Update your variables here
+		shouldRun = gm.tick();
+
+		// Physics updates.
+		while (gm.shouldTickPhysics())
+		{
+			gm.tickPhysics();
+		}
+
 		//----------------------------------------------------------------------------------
 
 		// Draw
 		//----------------------------------------------------------------------------------
-		BeginDrawing();
-
-		ClearBackground(RAYWHITE);
-
-		DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-
-		EndDrawing();
+		gm.draw();
 		//----------------------------------------------------------------------------------
 	}
 
 	// De-Initialization
 	//--------------------------------------------------------------------------------------   
-	CloseWindow();        // Close window and OpenGL context
+	gm.exit();
 	//--------------------------------------------------------------------------------------
 
 	return 0;
