@@ -8,18 +8,18 @@ int main()
 	//--------------------------------------------------------------------------------------
 	game gm;
 
-	gm.init();
-	gm.fixedTimeStep = 1.0f / 30.0f; // About 30 times 1 second.
+	// Timestep is initialized to about 30 times/1 second.
+	gm.init(800, 450, 1.0f / 30.0f);
 
-	bool shouldRun = true;
+	//bool shouldRun = true;
 	//--------------------------------------------------------------------------------------
 
 	// Main game loop
-	while (shouldRun)
+	while (gm.tick())
 	{
 		// Update
 		//----------------------------------------------------------------------------------
-		shouldRun = gm.tick();
+		//shouldRun = gm.tick();
 
 		// Physics updates.
 		while (gm.shouldTickPhysics())

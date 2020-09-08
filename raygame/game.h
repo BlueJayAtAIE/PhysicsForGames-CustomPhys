@@ -1,9 +1,15 @@
 #pragma once
 
+#include <vector>
+
+#include "physObject.h"
+
 class game
 {
 	// Accumulator for physics updates.
 	float accumulatedDeltaTime;
+
+	std::vector<physObject> physObjects;
 
 public:
 	game();
@@ -13,7 +19,7 @@ public:
 	float fixedTimeStep;
 
 	// Create window and initialize the rendering context.
-	void init();
+	void init(int screenWidth, int screenHeight, float timeStep);
 
 	// Update logic for the game.
 	// - Return true for as long as the window stays open.
