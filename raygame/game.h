@@ -1,8 +1,16 @@
 #pragma once
 
-#include <vector>
+#include <vector>           // vector
+#include <unordered_map>    // unordered map, like a hashtable
 
-#include "physObject.h"
+#include "physObject.h" 
+
+using collisionPair = uint8_t; // type-alias, like a typedef - for better readability.
+using collisionFunc = bool(*)(glm::vec2, collider, glm::vec2, collider);  // RETURN_TYPE(*)(PARAMETER_TYPES) - function pointer - so we can call them later
+using collisionMap = std::unordered_map<collisionPair, collisionFunc>; // unordered map is basically a hash table
+// Given two objects, we need to figure out what function to call in order to test whether they're in collision.
+// Type punning.
+
 
 class game
 {
@@ -10,6 +18,8 @@ class game
 	float accumulatedDeltaTime;
 
 	std::vector<physObject> physObjects;
+
+	static collisionMap collisionCheckers;
 
 public:
 	game();
