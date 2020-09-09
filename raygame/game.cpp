@@ -34,8 +34,8 @@ bool game::tick()
 	{
 		auto cursorPos = GetMousePosition();
 
-		physObject baby({ cursorPos.x, cursorPos.y }, { 0,0 }, (rand() % 10) + 1);
-		baby.addImpulse({ 100, 0 });
+		physObject baby({ cursorPos.x, cursorPos.y }, { 0,0 }, (rand() % 10) + 1, true);
+		baby.addImpulse({ rand() % 101 , rand() % 101 });
 
 		physObjects.push_back(baby);
 	}
@@ -56,8 +56,6 @@ void game::tickPhysics()
 	{
 		obj.tickPhysics(fixedTimeStep);
 	}
-
-	// TODO: screenwrap?
 }
 
 bool game::shouldTickPhysics() const
