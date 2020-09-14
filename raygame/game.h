@@ -8,6 +8,9 @@
 using collisionPair = uint8_t; // type-alias, like a typedef - for better readability.
 using collisionFunc = bool(*)(glm::vec2, collider, glm::vec2, collider);  // RETURN_TYPE(*)(PARAMETER_TYPES) - function pointer - so we can call them later
 using collisionMap = std::unordered_map<collisionPair, collisionFunc>; // unordered map is basically a hash table
+
+using depenetrationFunc = glm::vec2(*)(glm::vec2, collider, glm::vec2, collider, float&);
+using depenetrationMap = std::unordered_map<collisionPair, depenetrationFunc>;
 // Given two objects, we need to figure out what function to call in order to test whether they're in collision.
 // Type punning.
 
@@ -20,6 +23,8 @@ class game
 	std::vector<physObject> physObjects;
 
 	static collisionMap collisionCheckers;
+
+	static depenetrationMap depenetrationFuncs;
 
 public:
 	game();

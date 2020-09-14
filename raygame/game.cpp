@@ -23,8 +23,19 @@ collisionMap setupCollisionChecks()
 	return map;
 }
 
+depenetrationMap setupDepenetrationFuncs()
+{
+	depenetrationMap map;
+	map[static_cast<collisionPair>(shapeType::CIRCLE | shapeType::CIRCLE)] = gatherCollisionDataCircleCircle;
+	// TODO: checkCircleAABB
+	// TODO: checkAABBAABB
+
+	return map;
+}
+
 // Define the static variable in game.
 collisionMap game::collisionCheckers = setupCollisionChecks();
+depenetrationMap game::depenetrationFuncs = setupDepenetrationFuncs();
 
 game::game()
 {
@@ -54,7 +65,7 @@ bool game::tick()
 	{
 		auto cursorPos = GetMousePosition();
 
-		physObject baby({ cursorPos.x, cursorPos.y }, { 0,0 }, (rand() % 10) + 1, true);
+		physObject baby({ cursorPos.x, cursorPos.y }, { 0,0 }, (rand() % 10) + 3, true);
 		baby.coll.circleData.radius = baby.mass;
 		baby.addImpulse({ rand() % 101 , rand() % 101 });
 
@@ -96,13 +107,33 @@ void game::tickPhysics()
 			collisionPair pairType = static_cast<collisionPair>(lhs.coll.colliderShape | lhs.coll.colliderShape);
 
 			// Get the collision check function to call, and then call it.
-			bool collision = collisionCheckers[pairType](first->pos, first->coll, second->pos, second->coll);;
+			bool collision = collisionCheckers[pairType](first->pos, first->coll, second->pos, second->coll);
 
-			// Do Something:tm: with that collision (if it happens).
+			// Gather collision response data.
 			if (collision)
 			{
-				std::cout << "collision at (" << lhs.pos.x << "," << lhs.pos.y << ") and (" << rhs.pos.x << "," << rhs.pos.y << ")." << std::endl;
+				float pen = 0.0f;
+
+				// Generate responding impulses.
+				glm::vec2 normal = depenetrationFuncs[pairType](first->pos, first->coll, second->pos, second->coll, pen);
+
+				glm::vec2 resImpulses[2];
+
+				resoloveCollision(first->pos, first->velocity, first->mass, second->pos, second->velocity, second->mass, 1.0f, normal, resImpulses);
+				// Physically separate the two objects.
+				first->pos += normal * pen;
+				second->pos -= normal * pen;
+
+				// Update their velocities.
+				first->velocity = resImpulses[0];
+				second->velocity = resImpulses[1];
 			}
+
+			// Do Something:tm: with that collision (if it happens).
+			//if (collision)
+			//{
+			//	std::cout << "collision at (" << lhs.pos.x << "," << lhs.pos.y << ") and (" << rhs.pos.x << "," << rhs.pos.y << ")." << std::endl;
+			//}
 		}
 	}
 
