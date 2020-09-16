@@ -17,8 +17,8 @@ collisionMap setupCollisionChecks()
 {
 	collisionMap map;
 	map[static_cast<collisionPair>(shapeType::CIRCLE | shapeType::CIRCLE)] = checkCircleCircle;
-	// TODO: checkCircleAABB
-	// TODO: checkAABBAABB
+	map[static_cast<collisionPair>(shapeType::CIRCLE | shapeType::AABB)] = checkCircleAABB;
+	map[static_cast<collisionPair>(shapeType::AABB | shapeType::AABB)] = checkAABBAABB;
 
 	return map;
 }
@@ -26,9 +26,9 @@ collisionMap setupCollisionChecks()
 depenetrationMap setupDepenetrationFuncs()
 {
 	depenetrationMap map;
-	map[static_cast<collisionPair>(shapeType::CIRCLE | shapeType::CIRCLE)] = gatherCollisionDataCircleCircle;
-	// TODO: checkCircleAABB
-	// TODO: checkAABBAABB
+	map[static_cast<collisionPair>(shapeType::CIRCLE | shapeType::CIRCLE)] = depenetrationCircleCircle;
+	map[static_cast<collisionPair>(shapeType::CIRCLE | shapeType::AABB)] = depenetrationCircleAABB;
+	map[static_cast<collisionPair>(shapeType::AABB | shapeType::AABB)] = depenetrationAABBAABB;
 
 	return map;
 }
@@ -61,13 +61,28 @@ bool game::tick()
 	accumulatedDeltaTime += GetFrameTime();
 
 	// If clicked, add a new physObject.
+	// Left click for Circle,
 	if (IsMouseButtonPressed(0))
 	{
 		auto cursorPos = GetMousePosition();
 
 		physObject baby({ cursorPos.x, cursorPos.y }, { 0,0 }, (rand() % 10) + 3, true);
+		baby.coll.colliderShape = shapeType::CIRCLE;
 		baby.coll.circleData.radius = baby.mass;
-		baby.addImpulse({ rand() % 101 , rand() % 101 });
+		baby.addImpulse({ rand() % 201 , rand() % 201 });
+
+		physObjects.push_back(baby);
+	}
+
+	// and Right click for AABB.
+	if (IsMouseButtonPressed(1))
+	{
+		auto cursorPos = GetMousePosition();
+
+		physObject baby({ cursorPos.x, cursorPos.y }, { 0,0 }, (rand() % 10) + 5, true);
+		baby.coll.colliderShape = shapeType::AABB;
+		baby.coll.AABBData.dimentions = { baby.mass, baby.mass };
+		baby.addImpulse({ rand() % 201 , rand() % 201 });
 
 		physObjects.push_back(baby);
 	}
@@ -81,19 +96,23 @@ void game::tickPhysics()
 {
 	accumulatedDeltaTime -= fixedTimeStep;
 
-	// TODO: gravity for all physics objects which have gravity enabled.
-
-	// TODO optimize with spatial partitioning
-	// Test for collision
 	for (auto& lhs : physObjects)
 	{
+		if (lhs.useGravity)
+		{
+			lhs.addForce({ 0, 9.81f }); // Consider other ways of adding gravity maybe?
+		}
+
+		// TODO optimize with spatial partitioning
+
+		// Test for collision
 		for (auto& rhs : physObjects)
 		{
 			// Skip ourselves
 			if (&lhs == &rhs) { continue; }
 
-			auto *first = &lhs;
-			auto *second = &rhs;
+			auto* first = &lhs;
+			auto* second = &rhs;
 
 			// Swap our pointers around so they're in the right order.
 			// static_cast<TARGET_TYPE>(VARIABLE) is effectively the same as (TARGET_TYPE)VARIABLE
@@ -128,12 +147,6 @@ void game::tickPhysics()
 				first->velocity = resImpulses[0];
 				second->velocity = resImpulses[1];
 			}
-
-			// Do Something:tm: with that collision (if it happens).
-			//if (collision)
-			//{
-			//	std::cout << "collision at (" << lhs.pos.x << "," << lhs.pos.y << ") and (" << rhs.pos.x << "," << rhs.pos.y << ")." << std::endl;
-			//}
 		}
 	}
 

@@ -12,7 +12,7 @@ physObject::physObject()
 
 	useGravity = true;
 
-	coll = { shapeType::CIRCLE, circle{10.0f} };
+	//coll = { shapeType::CIRCLE, circle{10.0f} };
 }
 
 physObject::physObject(glm::vec2 startingPos, glm::vec2 startingVelocity, float startingMass, bool useGrav)
@@ -24,9 +24,6 @@ physObject::physObject(glm::vec2 startingPos, glm::vec2 startingVelocity, float 
 	mass = startingMass;
 
 	useGravity = useGrav;
-
-	// DEFAULT, CREATE A WAY TO OVERRIDE THIS LATER
-	coll = { shapeType::CIRCLE, circle{10.0f} };
 }
 
 void physObject::tickPhysics(float deltaTime)
@@ -34,11 +31,6 @@ void physObject::tickPhysics(float deltaTime)
 	// Intiragte forces into velocity.
 	velocity += forces * deltaTime;
 	forces = { 0,0 };
-
-	if (useGravity)
-	{
-		//velocity.y += 9.81f * deltaTime; // Consider other ways of adding gravity maybe?
-	}
 
 	// TODO: implement some linear drag
 
@@ -73,7 +65,10 @@ void physObject::draw() const
 		DrawPixel((int)pos.x, (int)pos.y, BLACK);
 		break;
 	case shapeType::CIRCLE:
-		DrawCircle((int)pos.x, (int)pos.y, coll.circleData.radius, ORANGE);
+		DrawCircle((int)pos.x, (int)pos.y, coll.circleData.radius, WHITE);
+		break;
+	case shapeType::AABB:
+		DrawRectangle((int)pos.x, (int)pos.y, coll.AABBData.dimentions.x, coll.AABBData.dimentions.y, RAYWHITE);
 		break;
 	default:
 		break;

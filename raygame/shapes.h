@@ -9,30 +9,48 @@ struct circle
 	float radius;
 };
 
-// TODO: create an AABB shape
+struct AABB
+{
+	glm::vec2 dimentions;
+};
 
 enum class shapeType : uint8_t
 {
 	NONE = 0,
 	CIRCLE = 1 << 0,
-	AABB = 1 << 1 // TODO: implement AABBs into our shape system
+	AABB = 1 << 1
 };
 
 struct collider
 {
 	shapeType colliderShape;
+
 	union
 	{
 		circle circleData;
-		// TODO: add the data for an AABB
+		AABB AABBData;
 	};
 };
 
 bool checkCircleCircle(glm::vec2 posA, circle circleA, glm::vec2 posB, circle circleB);
 bool checkCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collider circleB);
 
-glm::vec2 gatherCollisionDataCircleCircle(glm::vec2 posA, circle circleA, glm::vec2 posB, circle circleB, float& pen);
-glm::vec2 gatherCollisionDataCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collider circleB, float& pen);
+bool checkCircleAABB(glm::vec2 posA, circle circle, glm::vec2 posB, AABB AABB);
+bool checkCircleAABB(glm::vec2 posA, collider circle, glm::vec2 posB, collider AABB);
+
+bool checkAABBAABB(glm::vec2 posA, AABB AABBa, glm::vec2 posB, AABB AABBb);
+bool checkAABBAABB(glm::vec2 posA, collider AABBa, glm::vec2 posB, collider AABBb);
+
+
+glm::vec2 depenetrationCircleCircle(glm::vec2 posA, circle circleA, glm::vec2 posB, circle circleB, float& pen);
+glm::vec2 depenetrationCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collider circleB, float& pen);
+
+glm::vec2 depenetrationCircleAABB(glm::vec2 posA, circle circle, glm::vec2 posB, AABB AABB, float& pen);
+glm::vec2 depenetrationCircleAABB(glm::vec2 posA, collider circle, glm::vec2 posB, collider AABB, float& pen);
+
+glm::vec2 depenetrationAABBAABB(glm::vec2 posA, AABB AABBa, glm::vec2 posB, AABB AABBb, float& pen);
+glm::vec2 depenetrationAABBAABB(glm::vec2 posA, collider AABBa, glm::vec2 posB, collider AABBb, float& pen);
+
 
 void resoloveCollision(glm::vec2 posA, glm::vec2 velA, float massA,
 					   glm::vec2 posB, glm::vec2 velB, float massB,
