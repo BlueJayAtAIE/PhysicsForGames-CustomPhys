@@ -35,11 +35,6 @@ void physObject::tickPhysics(float deltaTime)
 	velocity += forces * deltaTime;
 	forces = { 0,0 };
 
-	if (useGravity)
-	{
-		//velocity.y += 9.81f * deltaTime; // Consider other ways of adding gravity maybe?
-	}
-
 	// TODO: implement some linear drag
 
 	// Intigrate velocity into position.

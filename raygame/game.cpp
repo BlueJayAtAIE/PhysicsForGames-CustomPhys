@@ -81,12 +81,17 @@ void game::tickPhysics()
 {
 	accumulatedDeltaTime -= fixedTimeStep;
 
-	// TODO: gravity for all physics objects which have gravity enabled.
 
 	// TODO optimize with spatial partitioning
 	// Test for collision
 	for (auto& lhs : physObjects)
 	{
+		if (lhs.useGravity)
+		{
+			lhs.addForce({0, 9.81f });
+		}
+
+
 		for (auto& rhs : physObjects)
 		{
 			// Skip ourselves
