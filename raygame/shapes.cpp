@@ -19,7 +19,7 @@ bool checkCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collide
 	return checkCircleCircle(posA, circleA.circleData, posB, circleB.circleData);
 }
 
-glm::vec2 gatherCollisionDataCircleCircle(glm::vec2 posA, circle circleA, glm::vec2 posB, circle circleB, float& pen)
+glm::vec2 depenetrationCircleCircle(glm::vec2 posA, circle circleA, glm::vec2 posB, circle circleB, float& pen)
 {
 	// Calculate their distances.
 	float distance = glm::length(posA - posB);
@@ -33,9 +33,9 @@ glm::vec2 gatherCollisionDataCircleCircle(glm::vec2 posA, circle circleA, glm::v
 	return glm::normalize(posA - posB);
 }
 
-glm::vec2 gatherCollisionDataCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collider circleB, float& pen)
+glm::vec2 depenetrationCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collider circleB, float& pen)
 {
-	return gatherCollisionDataCircleCircle(posA, circleA.circleData, posB, circleB.circleData, pen);
+	return depenetrationCircleCircle(posA, circleA.circleData, posB, circleB.circleData, pen);
 }
 
 void resoloveCollision(glm::vec2 posA, glm::vec2 velA, float massA, glm::vec2 posB, glm::vec2 velB, float massB, float elasticity, glm::vec2 colNormal, glm::vec2* dst)

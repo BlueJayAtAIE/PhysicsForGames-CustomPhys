@@ -31,8 +31,8 @@ struct collider
 bool checkCircleCircle(glm::vec2 posA, circle circleA, glm::vec2 posB, circle circleB);
 bool checkCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collider circleB);
 
-glm::vec2 gatherCollisionDataCircleCircle(glm::vec2 posA, circle circleA, glm::vec2 posB, circle circleB, float& pen);
-glm::vec2 gatherCollisionDataCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collider circleB, float& pen);
+glm::vec2 depenetrationCircleCircle(glm::vec2 posA, circle circleA, glm::vec2 posB, circle circleB, float& pen);
+glm::vec2 depenetrationCircleCircle(glm::vec2 posA, collider circleA, glm::vec2 posB, collider circleB, float& pen);
 
 void resoloveCollision(glm::vec2 posA, glm::vec2 velA, float massA,
 					   glm::vec2 posB, glm::vec2 velB, float massB,

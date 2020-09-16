@@ -26,7 +26,7 @@ collisionMap setupCollisionChecks()
 depenetrationMap setupDepenetrationFuncs()
 {
 	depenetrationMap map;
-	map[static_cast<collisionPair>(shapeType::CIRCLE | shapeType::CIRCLE)] = gatherCollisionDataCircleCircle;
+	map[static_cast<collisionPair>(shapeType::CIRCLE | shapeType::CIRCLE)] = depenetrationCircleCircle;
 	// TODO: checkCircleAABB
 	// TODO: checkAABBAABB
 
