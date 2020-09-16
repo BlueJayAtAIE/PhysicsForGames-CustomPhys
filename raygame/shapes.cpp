@@ -44,7 +44,7 @@ void resoloveCollision(glm::vec2 posA, glm::vec2 velA, float massA, glm::vec2 po
 	glm::vec2 relVel = velA - velB;
 
 	// Calculate inpulse magnitutde.
-	float impulseMag = glm::dot(-(-1.0f + elasticity) * relVel, colNormal) / 
+	float impulseMag = glm::dot(-(1.0f + elasticity) * relVel, colNormal) / 
 					   glm::dot(colNormal, colNormal * (1 / massA + 1 / massB));
 
 	// Write all impulses for the two objects into the given array.

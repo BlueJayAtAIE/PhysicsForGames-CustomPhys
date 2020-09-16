@@ -68,7 +68,7 @@ void physObject::draw() const
 		DrawPixel((int)pos.x, (int)pos.y, BLACK);
 		break;
 	case shapeType::CIRCLE:
-		DrawCircle((int)pos.x, (int)pos.y, coll.circleData.radius, ORANGE);
+		DrawCircle((int)pos.x, (int)pos.y, coll.circleData.radius, WHITE);
 		break;
 	default:
 		break;

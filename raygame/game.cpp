@@ -60,6 +60,19 @@ bool game::tick()
 	// Add delta time to the accumulator.
 	accumulatedDeltaTime += GetFrameTime();
 
+	if (IsKeyPressed(KEY_R))
+	{
+		physObjects.clear();
+	}
+
+	if (IsKeyPressed(KEY_E))
+	{
+		for (auto& physObj : physObjects)
+		{
+			physObj.addImpulse({ rand() % 501 , rand() % 501 });
+		}
+	}
+
 	// If clicked, add a new physObject.
 	if (IsMouseButtonPressed(0))
 	{
